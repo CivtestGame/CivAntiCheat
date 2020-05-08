@@ -15,7 +15,7 @@ function ac.register_module(def)
    def.name = def.name or error("Anticheat module registered without a name.")
 
    def.severity = def.severity or 1.1
-   def.threshold = def.threshhold or 2
+   def.threshold = def.threshold or 2
    def.decay = def.decay or 1.01
 
    def.violations = {}
