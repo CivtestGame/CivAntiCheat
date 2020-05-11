@@ -4,13 +4,18 @@ local ac = civanticheat
 local player_pos_history = {}
 
 ac.register_module({
-      name = "Fly",
+      name = "fly",
       severity = 1.2,
       threshold = 3,
       decay = 0.95,
 
       check_frequency = 0.25,
       check = function(self, player)
+         if minetest.check_player_privs(player, {fly = true}) then
+            -- Disable flyhack check for those with the 'fly' privilege
+            return false
+         end
+
          local pname = player:get_player_name()
          local ppos = player:get_pos()
 
