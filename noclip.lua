@@ -11,13 +11,13 @@ ac.register_module({
 
       check_frequency = 0.5,
       check = function(self, player)
-         -- local has_noclip = minetest.check_player_privs(
-         --    player, {noclip = true}
-         -- )
-         -- if has_noclip then
-         --    -- Disable noclip check for flying + noclipping players
-         --    return false
-         -- end
+         local has_noclip = minetest.check_player_privs(
+            player, {noclip = true}
+         )
+         if has_noclip then
+            -- Disable noclip check for flying + noclipping players
+            return false
+         end
 
          local pname = player:get_player_name()
          local ppos = player:get_pos()
