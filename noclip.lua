@@ -33,7 +33,10 @@ ac.register_module({
          local lower_node_def = minetest.registered_nodes[lower_node.name]
 
          if not upper_node_def or not lower_node_def then
-            ac.log("NoClip can't check defs of an undefined node...")
+            minetest.log(
+               "warning",
+               "[CivAntiCheat] NoClip can't check defs of an undefined node!"
+            )
             return false
          end
 

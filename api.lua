@@ -20,6 +20,7 @@ function ac.register_module(def)
 
    def.violations = {}
    def.violation_level = {}
+   def.max_violation_level = {}
 
    def.enabled = def.enabled or true
 
@@ -64,7 +65,11 @@ function ac.record_violation(acmodule, player_name)
    acmodule.violation_level[player_name]
       = acmodule.violation_level[player_name] or 1
 
+   acmodule.max_violation_level[player_name]
+      = acmodule.max_violation_level[player_name] or 1
+
    local vl_tab = acmodule.violation_level
+   local max_vl_tab = acmodule.max_violation_level
 
    local threshold = acmodule.threshold
    local severity = acmodule.severity
@@ -82,6 +87,7 @@ function ac.record_violation(acmodule, player_name)
    end
 
    vl_tab[player_name] = new_vl
+   max_vl_tab[player_name] = math.max(max_vl_tab[player_name], new_vl)
 
 end
 

@@ -34,8 +34,12 @@ CivAntiCheat: %s
          )
 
          for _,acmodule in pairs(ac.modules) do
-            local name, vl = acmodule.name, acmodule.violation_level[pname]
-            msg = msg .. (" - [%s] VL: %.2f\n"):format(acmodule.name:upper(), vl)
+            local name = acmodule.name
+            local vl = acmodule.violation_level[pname] or 1.0
+            local max_vl = acmodule.max_violation_level[pname] or 1.0
+            msg = msg
+               .. (" - [%s] VL: %.2f (max: %.2f)\n")
+               :format(acmodule.name:upper(), vl, max_vl)
          end
 
          minetest.chat_send_player(sender, msg)
