@@ -9,7 +9,40 @@ function ac.log(acmodule, msg, ...)
    )
 end
 
--- ac._lowest_timer = nil
+function ac.broadcast(acmodule, msg, ...)
+   for _,player in ipairs(minetest.get_connected_players()) do
+      local is_moderator = minetest.check_player_privs(
+         player, { civanticheat = true }
+      )
+      local is_tester = minetest.check_player_privs(
+         player, { civanticheat_test = true }
+      )
+
+      if is_moderator or is_tester then
+         local pname = player:get_player_name()
+         local c = minetest.colorize
+         local full_msg = c("#f00", "[AC][")
+            .. acmodule.name:upper()
+            .. c("#f00","] ")
+            .. msg:format(...)
+
+         minetest.chat_send_player(pname, full_msg)
+      end
+   end
+end
+
+function ac.try_broadcast_violation(acmodule, player_name, msg, ...)
+   local bcf = acmodule.broadcast_filter
+   bcf[player_name] = bcf[player_name] or acmodule.broadcast_filter_limit
+
+   if bcf[player_name] < acmodule.broadcast_filter_limit then
+      bcf[player_name] = bcf[player_name] + 1
+      return
+   end
+
+   acmodule:broadcast(msg, ...)
+   bcf[player_name] = 0
+end
 
 function ac.register_module(def)
    def.name = def.name or error("Anticheat module registered without a name.")
@@ -25,6 +58,11 @@ function ac.register_module(def)
    def.enabled = def.enabled or true
 
    def.log = ac.log
+   def.broadcast = ac.broadcast
+
+   -- Used for filtering out excessive broadcasting
+   def.broadcast_filter = {}
+   def.broadcast_filter_limit = def.broadcast_filter_limit or 10
 
    -- Execute the check every half-second
    def.check = def.check or nil
@@ -81,6 +119,12 @@ function ac.record_violation(acmodule, player_name)
    if new_vl > threshold then
       local pinfo = minetest.get_player_information(player_name)
       acmodule:log(
+         "%s VL=%.2f exceeded threshold of %.2f (RTT %.2f Jitter %.2f)",
+         player_name, new_vl, threshold, pinfo.avg_rtt, pinfo.avg_jitter
+      )
+
+      ac.try_broadcast_violation(
+         acmodule, player_name,
          "%s VL=%.2f exceeded threshold of %.2f (RTT %.2f Jitter %.2f)",
          player_name, new_vl, threshold, pinfo.avg_rtt, pinfo.avg_jitter
       )
