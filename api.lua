@@ -119,8 +119,11 @@ minetest.register_on_mods_loaded(function()
 
             for _,player in ipairs(minetest.get_connected_players()) do
                local pname = player:get_player_name()
+               local is_tester = minetest.check_player_privs(
+                  player, { civanticheat_test = true }
+               )
                for _,acmodule in ipairs(modules_to_check) do
-                  local result = acmodule:check(player)
+                  local result = acmodule:check(player, is_tester)
                   if result then
                      ac.record_violation(acmodule, pname)
                   else

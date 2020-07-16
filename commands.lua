@@ -3,6 +3,9 @@ local ac = civanticheat
 
 minetest.register_privilege("civanticheat", "Privilege for CivAntiCheat")
 
+minetest.register_privilege("civanticheat_test",
+                            "Privilege for CivAntiCheat testing purposes.")
+
 minetest.register_chatcommand(
    "ac",
    {

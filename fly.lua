@@ -10,10 +10,13 @@ ac.register_module({
       decay = 0.95,
 
       check_frequency = 0.25,
-      check = function(self, player)
-         if minetest.check_player_privs(player, {fly = true}) then
-            -- Disable flyhack check for those with the 'fly' privilege
-            return false
+      check = function(self, player, is_tester)
+
+         if not is_tester then
+            if minetest.check_player_privs(player, {fly = true}) then
+               -- Disable flyhack check for those with the 'fly' privilege
+               return false
+            end
          end
 
          local pname = player:get_player_name()
