@@ -114,7 +114,9 @@ function ac.record_violation(acmodule, player_name)
 
    local vl = vl_tab[player_name]
 
-   local new_vl = vl * severity
+   local vl_cap = acmodule.vl_cap or 1000
+
+   local new_vl = math.min(vl * severity, vl_cap)
 
    if new_vl > threshold then
       local pinfo = minetest.get_player_information(player_name)
