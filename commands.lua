@@ -1,10 +1,18 @@
 
 local ac = civanticheat
 
-minetest.register_privilege("civanticheat", "Privilege for CivAntiCheat")
+minetest.register_privilege(
+   "civanticheat", "Privilege for CivAntiCheat management."
+)
 
-minetest.register_privilege("civanticheat_test",
-                            "Privilege for CivAntiCheat testing purposes.")
+minetest.register_privilege(
+   "civanticheat_test",
+   {
+      description = "Privilege for CivAntiCheat testing purposes.",
+      give_to_admin = false,
+      give_to_singleplayer = false
+   }
+)
 
 minetest.register_chatcommand(
    "ac",
